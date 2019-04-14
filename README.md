@@ -13,16 +13,49 @@ to get `kata` VMs to run under `minikube`.
 
 ## Prerequisites
 
-You need to have a machine that can support nested virtualisation. I used an `i7` laptop that had virtualisation enabled in the BIOS
-and was running Fedora 29.
+* Terraform - See [Terraform Download](https://www.terraform.io/downloads.html)
+* Git - See [Git](https://git-scm.com/downloads)
+* Packet Account - See [Packet Signup](https://app.packet.net/signup)
+* Packet Project ID & API User Token - See [Packet API FAQ](https://support.packet.com/kb/articles/api-integrations)
 
-To check if you have virtualisation enabled on the host, try:
+## Download Repo
 
-```bash
-$ egrep --color 'vmx|svm' /proc/cpuinfo
+Download this code locally 
+```
+git clone https://github.com/packet-labs/Kata-on-Packet
+cd Kata-on-Packet/terraform
 ```
 
-and look for **vmx** or **svm** coloured red in the output.
+## Setup Packet Account Details
+
+Replace the following with your own API Auth Token and Project ID values from the Packet GUI and then execute to update the config.
+```
+cp terraform.tfvars.sample terraform.tfvars
+echo packet_auth_token=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\" >> terraform.tfvars
+echo packet_project_id=\"12345678-90AB-CDEF-GHIJ-KLMNOPQRSTUV\" >> terraform.tfvars
+```
+
+## Deploy Lab Host
+
+Apply the Terraform which will startup a new physical host and install all the required software.
+```
+terraform init
+terraform apply
+```
+
+## Log into the Lab
+
+List the IP address of the lab.
+```
+terraform output
+```
+
+Log into the new host using an SSH client with the username lab.
+```
+ssh lab@<Lab IP>
+```
+The default password for the lab user is openstack.
+
 
 ## Setting up `minikube`
 
@@ -146,8 +179,8 @@ the magic lines in the yaml are:
 ```
 
 ```bash
-$ cd packaging/kata-deploy/examples
-$ kubectl apply -f test-deploy-kata-qemu.yaml
+lab@lab00$ cd packaging/kata-deploy/examples
+lab@lab00$ kubectl apply -f test-deploy-kata-qemu.yaml
 ```
 
 This deploys an apache php container run with the `kata` runtime. Wait a few moments to check it is running:
