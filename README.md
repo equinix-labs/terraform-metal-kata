@@ -97,7 +97,7 @@ That command will take a little while to pull down and install items, but ultima
 Your `minikube` should now be up. Let's try a quick check:
 
 ```bash
-$ kubectl get nodes
+lab@lab00$ kubectl get nodes
 NAME       STATUS   ROLES    AGE   VERSION
 minikube   Ready    master   78m   v1.13.4
 ```
@@ -105,7 +105,7 @@ minikube   Ready    master   78m   v1.13.4
 Now let's check if you have nested virtualisation enabled inside the `minikube` node:
 
 ```bash
-minikube ssh
+lab@lab00$ minikube ssh
                          _             _            
             _         _ ( )           ( )           
   ___ ___  (_)  ___  (_)| |/')  _   _ | |_      __  
@@ -122,24 +122,22 @@ $ exit
 
 ## Installing `kata`
 
-Now we need to install the `kata` runtime components. You will need a local copy of some `kata` components to help with this,
-and then use the host `kubectl` (that minikube has already configured for you) to deploy them:
+Now we need to install the `kata` runtime components. Terraform has already downloaded the `kata` components to help with this.
+Use the host `kubectl` to deploy them:
 
 ```bash
-$ git clone https://github.com/kata-containers/packaging.git
-$ cd packaging/kata-deploy
-$ kubectl apply -f kata-rbac.yaml
-$ kubectl apply -f kata-deploy.yaml
+lab@lab00$ kubectl apply -f packaging/kata-deploy/kata-rbac.yaml
+lab@lab00$ kubectl apply -f packaging/kata-deploy/kata-deploy.yaml
 ```
-
 This should have installed the `kata` components into `/opt/kata` inside the `minikube` node. Let's check:
 
 ```bash
-$ minikube ssh
+lab@lab00$ minikube ssh
 $ cd /opt/kata
 $ ls bin
-containerd-shim-kata-v2  kata-collect-data.sh  kata-qemu     qemu-ga	     qemu-system-x86_64
-firecracker		 kata-fc	       kata-runtime  qemu-pr-helper  virtfs-proxy-helper
+containerd-shim-kata-v2  kata-fc       qemu-ga             virtfs-proxy-helper
+firecracker              kata-qemu     qemu-pr-helper
+kata-collect-data.sh     kata-runtime  qemu-system-x86_64
 $ exit
 ```
 
@@ -151,8 +149,8 @@ Now the `kata` components are installed in the `minikube` node, we need to confi
 and when to use `kata` to run a pod.
 
 ```bash
-$ curl https://raw.githubusercontent.com/kubernetes/node-api/master/manifests/runtimeclass_crd.yaml > runtimeclass_crd.yaml
-$ kubectl apply -f runtimeclass_crd.yaml
+lab@lab00$ curl https://raw.githubusercontent.com/kubernetes/node-api/master/manifests/runtimeclass_crd.yaml > runtimeclass_crd.yaml
+lab@lab00$ kubectl apply -f runtimeclass_crd.yaml
 ```
 
 And now we need to register the `kata qemu` runtime with that class:
@@ -179,8 +177,7 @@ the magic lines in the yaml are:
 ```
 
 ```bash
-lab@lab00$ cd packaging/kata-deploy/examples
-lab@lab00$ kubectl apply -f test-deploy-kata-qemu.yaml
+lab@lab00$ kubectl apply -f packaging/kata-deploy/examples/test-deploy-kata-qemu.yaml
 ```
 
 This deploys an apache php container run with the `kata` runtime. Wait a few moments to check it is running:
