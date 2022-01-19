@@ -1,12 +1,12 @@
+# Kata on Equinix Metal
+
 ![](https://img.shields.io/badge/Stability-Experimental-red.svg)
 
-This repository is [Experimental](https://github.com/packethost/standards/blob/master/experimental-statement.md) meaning that it's based on untested ideas or techniques and not yet established or finalized or involves a radically new and innovative style! This means that support is best effort (at best!) and we strongly encourage you to NOT use this in production.
-
-# Kata on Packet
+This repository is [Experimental](https://github.com/equinix-labs/equinix-labs/blob/main/experimental-statement.md) meaning that it's based on untested ideas or techniques and not yet established or finalized or involves a radically new and innovative style! This means that support is best effort (at best!) and we strongly encourage you to NOT use this in production.
 
 Wouldn't it be nice if you could use `kata` under `minikube` to get an easy out of the box experience to try out Kata?
 
-Here is how to use a Packet bare metal host to run `kvm` via `minikube`, and then utilise nested virtualisation
+Here is how to use a Equinix Metal bare metal host to run `kvm` via `minikube`, and then utilise nested virtualisation
 to get `kata` VMs to run under `minikube`.
 
 # Software Components
@@ -19,24 +19,24 @@ to get `kata` VMs to run under `minikube`.
 
 * Terraform - See [Terraform Download](https://www.terraform.io/downloads.html)
 * Git - See [Git](https://git-scm.com/downloads)
-* Packet Account - See [Packet Signup](https://app.packet.net/signup)
-* Packet Project ID & API User Token - See [Packet API FAQ](https://support.packet.com/kb/articles/api-integrations)
+* Equinix Metal Account - See [Equinix Metal Signup](https://console.equinix.com)
+* Equinix Metal Project ID & API User Token - See [Equinix Metal API Tokens](https://metal.equinix.com/developers/docs/accounts/users/)
 
 ## Download Repo
 
 Download this code locally 
 ```
-git clone https://github.com/packet-labs/Kata-on-Packet
-cd Kata-on-Packet/terraform
+git clone https://github.com/equinix-labs/terraform-metal-kata
+cd terraform-metal-kata
 ```
 
-## Setup Packet Account Details
+## Setup Equinix Metal Account Details
 
-Replace the following with your own API Auth Token and Project ID values from the Packet GUI and then execute to update the config.
+Replace the following with your own API Auth Token and Project ID values from the Equinix Metal GUI and then execute to update the config.
 ```
 cp terraform.tfvars.sample terraform.tfvars
-echo packet_auth_token=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\" >> terraform.tfvars
-echo packet_project_id=\"12345678-90AB-CDEF-GHIJ-KLMNOPQRSTUV\" >> terraform.tfvars
+echo metal_auth_token=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\" >> terraform.tfvars
+echo metal_project_id=\"12345678-90AB-CDEF-GHIJ-KLMNOPQRSTUV\" >> terraform.tfvars
 ```
 
 ## Deploy Lab Host
