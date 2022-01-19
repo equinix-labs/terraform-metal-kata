@@ -1,15 +1,15 @@
-![](https://img.shields.io/badge/Stability-Experimental-red.svg)
+# Kata on Equinix Metal
 
-This repository is [Experimental](https://github.com/packethost/standards/blob/master/experimental-statement.md) meaning that it's based on untested ideas or techniques and not yet established or finalized or involves a radically new and innovative style! This means that support is best effort (at best!) and we strongly encourage you to NOT use this in production.
+![Experimental](https://img.shields.io/badge/Stability-Experimental-red.svg)
 
-# Kata on Packet
+This repository is [Experimental](https://github.com/equinix-labs/equinix-labs/blob/main/experimental-statement.md) meaning that it's based on untested ideas or techniques and not yet established or finalized or involves a radically new and innovative style! This means that support is best effort (at best!) and we strongly encourage you to NOT use this in production.
 
 Wouldn't it be nice if you could use `kata` under `minikube` to get an easy out of the box experience to try out Kata?
 
-Here is how to use a Packet bare metal host to run `kvm` via `minikube`, and then utilise nested virtualisation
+Here is how to use a Equinix Metal bare metal host to run `kvm` via `minikube`, and then utilise nested virtualization
 to get `kata` VMs to run under `minikube`.
 
-# Software Components
+## Software Components
 
 [minikube](https://kubernetes.io/docs/setup/minikube/) provides the virtualization to run a single node Kubernetes stack in a local VM.
 
@@ -17,32 +17,35 @@ to get `kata` VMs to run under `minikube`.
 
 ## Prerequisites
 
-* Terraform - See [Terraform Download](https://www.terraform.io/downloads.html)
-* Git - See [Git](https://git-scm.com/downloads)
-* Packet Account - See [Packet Signup](https://app.packet.net/signup)
-* Packet Project ID & API User Token - See [Packet API FAQ](https://support.packet.com/kb/articles/api-integrations)
+- Terraform - See [Terraform Download](https://www.terraform.io/downloads.html)
+- Git - See [Git](https://git-scm.com/downloads)
+- Equinix Metal Account - See [Equinix Metal Signup](https://console.equinix.com)
+- Equinix Metal Project ID & API User Token - See [Equinix Metal API Tokens](https://metal.equinix.com/developers/docs/accounts/users/)
 
 ## Download Repo
 
-Download this code locally 
-```
-git clone https://github.com/packet-labs/Kata-on-Packet
-cd Kata-on-Packet/terraform
+Download this code locally
+
+```sh
+git clone https://github.com/equinix-labs/terraform-metal-kata
+cd terraform-metal-kata
 ```
 
-## Setup Packet Account Details
+## Setup Equinix Metal Account Details
 
-Replace the following with your own API Auth Token and Project ID values from the Packet GUI and then execute to update the config.
-```
+Replace the following with your own API Auth Token and Project ID values from the Equinix Metal GUI and then execute to update the config.
+
+```sh
 cp terraform.tfvars.sample terraform.tfvars
-echo packet_auth_token=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\" >> terraform.tfvars
-echo packet_project_id=\"12345678-90AB-CDEF-GHIJ-KLMNOPQRSTUV\" >> terraform.tfvars
+echo metal_auth_token=\"ABCDEFGHIJKLMNOPQRSTUVWXYZ123456\" >> terraform.tfvars
+echo metal_project_id=\"12345678-90AB-CDEF-GHIJ-KLMNOPQRSTUV\" >> terraform.tfvars
 ```
 
 ## Deploy Lab Host
 
 Apply the Terraform which will startup a new physical host and install all the required software.
-```
+
+```sh
 terraform init
 terraform apply
 ```
@@ -50,33 +53,35 @@ terraform apply
 ## Log into the Lab
 
 List the IP address of the lab.
-```
+
+```sh
 terraform output
 ```
 
 Log into the new host using an SSH client with the username lab.
-```
+
+```sh
 ssh lab@<Lab IP>
 ```
-The default password for the lab user is openstack.
 
+The default password for the lab user is openstack.
 
 ## Setting up `minikube`
 
 To enable `kata` under `minikube`, we need to add a few configuration options to the default `minikube` setup. This is nice
-and easy, as `minikube` supports them on the setup commandline.
+and easy, as `minikube` supports them on the setup command-line.
 
 Here are the features, and why we need them:
 
-| what | why |
-| ---- | --- |
-| --vm-driver kvm2 | The host VM driver I tested with |
-| --memory 6144 | Allocate more memory, as Kata containers default to 1 or 2Gb |
-| --feature-gates=RuntimeClass=true | Kata needs to use the RuntimeClass k8s feature |
-| --network-plugin=cni | As recommended for [minikube CRI-o](https://kubernetes.io/docs/setup/minikube/#cri-o) |
-| --enable-default-cni | As recommended for [minikube CRI-o](https://kubernetes.io/docs/setup/minikube/#cri-o) |
-| --container-runtime=cri-o | Using CRI-O for Kata |
-| --bootstrapper=kubeadm | As recommended for [minikube CRI-o](https://kubernetes.io/docs/setup/minikube/#cri-o) |
+| what                              | why                                                                                   |
+| --------------------------------- | ------------------------------------------------------------------------------------- |
+| --vm-driver kvm2                  | The host VM driver I tested with                                                      |
+| --memory 6144                     | Allocate more memory, as Kata containers default to 1 or 2Gb                          |
+| --feature-gates=RuntimeClass=true | Kata needs to use the RuntimeClass k8s feature                                        |
+| --network-plugin=cni              | As recommended for [minikube CRI-o](https://kubernetes.io/docs/setup/minikube/#cri-o) |
+| --enable-default-cni              | As recommended for [minikube CRI-o](https://kubernetes.io/docs/setup/minikube/#cri-o) |
+| --container-runtime=cri-o         | Using CRI-O for Kata                                                                  |
+| --bootstrapper=kubeadm            | As recommended for [minikube CRI-o](https://kubernetes.io/docs/setup/minikube/#cri-o) |
 
 for `minikube` specific installation instructions see [the docs](https://kubernetes.io/docs/tasks/tools/install-minikube/),
 which will also help locate the information needed to get the `kvm2` driver installed etc.
@@ -110,9 +115,9 @@ Now let's check if you have nested virtualisation enabled inside the `minikube` 
 
 ```bash
 lab@lab00$ minikube ssh
-                         _             _            
-            _         _ ( )           ( )           
-  ___ ___  (_)  ___  (_)| |/')  _   _ | |_      __  
+                         _             _
+            _         _ ( )           ( )
+  ___ ___  (_)  ___  (_)| |/')  _   _ | |_      __
 /' _ ` _ `\| |/' _ `\| || , <  ( ) ( )| '_`\  /'__`\
 | ( ) ( ) || || ( ) || || |\`\ | (_) || |_) )(  ___/
 (_) (_) (_)(_)(_) (_)(_)(_) (_)`\___/'(_,__/'`\____)
@@ -133,6 +138,7 @@ Use the host `kubectl` to deploy them:
 lab@lab00$ kubectl apply -f packaging/kata-deploy/kata-rbac.yaml
 lab@lab00$ kubectl apply -f packaging/kata-deploy/kata-deploy.yaml
 ```
+
 This should have installed the `kata` components into `/opt/kata` inside the `minikube` node. Let's check:
 
 ```bash
@@ -176,8 +182,8 @@ OK, time to see if all that worked. First, let's launch a container that is defi
 the magic lines in the yaml are:
 
 ```yaml
-    spec:
-      runtimeClassName: kata-qemu
+spec:
+  runtimeClassName: kata-qemu
 ```
 
 ```bash
@@ -230,8 +236,5 @@ And, there we can see, the node is running kernel 4.15, but the container runnin
 ## Wrapping up
 
 So, there we have it. A relatively easy way to get a `minikube` up with `kata` containers installed. Be aware, this is only a
-small single node k8s cluster running under a nested virtualisation setup, so it will have limitaions - but, as a first introduction
+small single node k8s cluster running under a nested virtualization setup, so it will have limitations - but, as a first introduction
 to `kata`, and how to install it under kubernetes, it does its job.
-
-
-
