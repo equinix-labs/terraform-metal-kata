@@ -13,7 +13,7 @@ resource "null_resource" "kata-repo" {
   }
 
   provisioner "file" {
-    source      = "kata-repos.sh"
+    source      = "${path.module}/assets/kata-repos.sh"
     destination = "kata-repos.sh"
   }
 

@@ -12,6 +12,6 @@ resource "null_resource" "add-lab-user" {
   }
 
   provisioner "remote-exec" {
-    script = "add-lab-user.sh"
+    script = "${path.module}/assets/add-lab-user.sh"
   }
 }

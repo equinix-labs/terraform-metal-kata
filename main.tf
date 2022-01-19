@@ -1,10 +1,13 @@
+provider "metal" {
+  auth_token = var.metal_auth_token
+}
+
 resource "metal_ssh_key" "default" {
   name       = "default"
   public_key = tls_private_key.default.public_key_openssh
 }
 
 resource "metal_device" "lab" {
-
   depends_on = [metal_ssh_key.default]
 
   count            = var.lab_count
@@ -24,12 +27,12 @@ resource "metal_device" "lab" {
   billing_cycle = "hourly"
 
   provisioner "file" {
-    source      = "install-kubectl.sh"
+    source      = "${path.module}/assets/install-kubectl.sh"
     destination = "install-kubectl.sh"
   }
 
   provisioner "file" {
-    source      = "install-virtualbox.sh"
+    source      = "${path.module}/assets/install-virtualbox.sh"
     destination = "install-virtualbox.sh"
   }
 

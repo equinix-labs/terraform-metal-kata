@@ -11,28 +11,28 @@ resource "null_resource" "minikube" {
   }
 
   provisioner "file" {
-    source      = "add-libvirt-group.sh"
+    source      = "${path.module}/assets/add-libvirt-group.sh"
     destination = "add-libvirt-group.sh"
   }
 
 
   provisioner "file" {
-    source      = "install-kubectl.sh"
+    source      = "${path.module}/assets/install-kubectl.sh"
     destination = "install-kubectl.sh"
   }
 
   provisioner "file" {
-    source      = "install-kvm.sh"
+    source      = "${path.module}/assets/install-kvm.sh"
     destination = "install-kvm.sh"
   }
 
   provisioner "file" {
-    source      = "install-kvm-driver.sh"
+    source      = "${path.module}/assets/install-kvm-driver.sh"
     destination = "install-kvm-driver.sh"
   }
 
   provisioner "file" {
-    source      = "install-minikube.sh"
+    source      = "${path.module}/assets/install-minikube.sh"
     destination = "install-minikube.sh"
   }
 
