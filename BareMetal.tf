@@ -5,7 +5,7 @@ resource "metal_ssh_key" "default" {
 
 resource "metal_device" "lab" {
 
-  depends_on = ["metal_ssh_key.default"]
+  depends_on = [metal_ssh_key.default]
 
   count            = var.lab_count
   hostname         = format("lab%02d", count.index)
@@ -13,12 +13,13 @@ resource "metal_device" "lab" {
   plan             = var.plan
 
   connection {
+    host        = self.access_public_ipv4
     user        = "root"
     private_key = tls_private_key.default.private_key_pem
     agent       = false
     timeout     = "30s"
   }
-  facilities    = ["${var.metal_facility}"]
+  facilities    = [var.metal_facility]
   project_id    = var.metal_project_id
   billing_cycle = "hourly"
 

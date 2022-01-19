@@ -1,6 +1,6 @@
 resource "null_resource" "kata-repo" {
 
-  depends_on = ["null_resource.minikube"]
+  depends_on = [null_resource.minikube]
 
   count = var.lab_count
 
